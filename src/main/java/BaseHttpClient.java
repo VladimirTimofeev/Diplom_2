@@ -6,14 +6,19 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
+import java.net.Authenticator;
+
 import static io.restassured.RestAssured.given;
 
 
 public class BaseHttpClient {
 
+
+
     private RequestSpecification baseRequestSpec = new RequestSpecBuilder()
             .setBaseUri(URL.HOST)
             .addHeader("Content-Type", "application/json")
+            .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YjVkOTEyOWVkMjgwMDAxYjU3Y2RiYSIsImlhdCI6MTczOTk3MDg1MywiZXhwIjoxNzM5OTcyMDUzfQ.j_WT3wdr4xSN0j1ISBDFTU05AriHdGtRH-DhqDa2Tl0")
             .setRelaxedHTTPSValidation()
             .addFilter(new RequestLoggingFilter())
             .addFilter(new ResponseLoggingFilter())
@@ -23,6 +28,14 @@ public class BaseHttpClient {
     protected Response doGetRequest(String path) {
         return given()
                 .spec(baseRequestSpec)
+                .get(path)
+                .thenReturn();
+    }
+
+    protected Response doGetRequest(String token, String path) {
+        return given()
+                .spec(baseRequestSpec)
+                .auth().oauth2(token)
                 .get(path)
                 .thenReturn();
     }

@@ -17,19 +17,19 @@ public class CheckStatus {
     }
 
     //401
-    public void checkSatusCode401(Response response) {
+    public void checkStatusCode401(Response response) {
         response.then().assertThat()
                 .statusCode(401);
     }
 
     //403
-    public void checkSatusCode403(Response response) {
+    public void checkStatusCode403(Response response) {
         response.then().assertThat()
                 .statusCode(403);
     }
 
     //500
-    public void checkSatusCode500(Response response) {
+    public void checkStatusCode500(Response response) {
         response.then().assertThat()
                 .statusCode(500);
     }

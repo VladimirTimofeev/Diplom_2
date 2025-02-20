@@ -1,18 +1,33 @@
 import io.qameta.allure.Step;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.Test;
 
 public class GetTest {
 
-    private GetSteps getSteps = new GetSteps();
+    private GetApi getApi = new GetApi();
     private CheckStatus checkStatus = new CheckStatus();
     private CheckBodyResponse checkBodyResponse = new CheckBodyResponse();
 
     private Response response;
 
-    @Step("Send get request to /api/ingredients")
-    public Response getIngridients() {
-        return response = getSteps.responseIngridients();
+    private String accsessToken;
+    private String refreshToken;
+
+    @Step("Send get request to /api/ingredients without token")
+    public Response getOrderSpecificUserWithoutToken() {
+        return response = getApi.getRequestSpecificUser();
+    }
+
+    @Step("Send get request to /api/ingredients with token")
+    public Response getOrderSpecificUserWithToken() {
+        return response = getApi.getRequestSpecificUser(accsessToken);
+    }
+
+    @Step("Извлечение accessToken и refreshToken")
+    public void getAccessToken(Response response) {
+        accsessToken = response.jsonPath().getString("accessToken");
+        refreshToken = response.jsonPath().getString("refreshToken");
     }
 
     @Step("Check response status code 200")
@@ -20,17 +35,34 @@ public class GetTest {
         checkStatus.checkStatusCode200(response);
     }
 
+    @Step("Check response status code 401")
+    public void checkStatusCode401(Response response) {
+        checkStatus.checkStatusCode401(response);
+    }
+
     @Step("Check body ID")
-    public void checkBodyIdNotNulle(Response response) {
-        checkBodyResponse.checkBody_id(response);
+    public void checkBodyMessageNotAuthorizationUser(Response response) {
+        checkBodyResponse.checkMessageNotAuthorizationUser(response);
+    }
+
+    @Step("Check teg succsess TRUE")
+    public void checkBodyTegSuccessTrue(Response response) {
+        checkBodyResponse.checkDodyTegSuccessTrue(response);
     }
 
     @Test
-    public void getListIngridients() {
-        response = getIngridients();
-        checkStatusCode200(response);
-        checkBodyIdNotNulle(response);
+    @DisplayName("Получение списка ингридиентов неавторизованного пользователя")
+    public void getListIngridientsSpecUserWithoutToken() {
+        response = getOrderSpecificUserWithoutToken();
+        checkStatusCode401(response);
+        checkBodyMessageNotAuthorizationUser(response);
     }
 
-
+    @Test
+    @DisplayName("Получение списка ингридиентов авторизованного пользователя")
+    public void getListIngridientsSpecUserWithToken() {
+        response = getOrderSpecificUserWithToken();
+        checkStatusCode200(response);
+        checkBodyTegSuccessTrue(response);
+    }
 }
