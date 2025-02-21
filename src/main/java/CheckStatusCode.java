@@ -1,6 +1,6 @@
 import io.restassured.response.Response;
 
-public class CheckStatus {
+public class CheckStatusCode {
 
 //    private Response response;
 
@@ -8,6 +8,11 @@ public class CheckStatus {
     public void checkStatusCode200(Response response) {
         response.then().assertThat()
                 .statusCode(200);
+    }
+
+    public void checkStatusCode202(Response response) {
+        response.then().assertThat()
+                .statusCode(202);
     }
 
     //400

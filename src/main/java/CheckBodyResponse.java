@@ -5,19 +5,40 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public class CheckBodyResponse {
 
-    public void checkBody_id(Response response) {
-        response.then().assertThat()
-                .body("data._id", notNullValue());
-    }
-
+    //Проверка сообщения, что пользователь не выторизован
     public void checkMessageNotAuthorizationUser(Response response) {
         response.then().assertThat()
                 .body("message", equalTo("You should be authorised"));
     }
 
-    public void checkDodyTegSuccessTrue(Response response) {
+    //Проверка сообщения об удачном удалении пользователя
+    public void checkMessageDeleteUser(Response response) {
+        response.then().assertThat()
+                .body("message", equalTo("User successfully removed"));
+    }
+
+    //Проверка сообщения уже созданном пользователе
+    public void checkMessageAboutCreatedUser(Response response) {
+        response.then().assertThat()
+                .body("message", equalTo("User already exists"));
+    }
+
+    //Проверка ответа отсутствия обязательного поля для регистрации
+    public void checkMessageAbsenceOfARrequiredFieldForRegistration(Response response) {
+        response.then().assertThat()
+                .body("message", equalTo("Email, password and name are required fields"));
+    }
+
+    //Проверка тега ответа TRUE
+    public void checkBodyTegSuccessTrue(Response response) {
         response.then().assertThat()
                 .body("success", equalTo(true));
+    }
+
+    //Проверка тега ответа FALSE
+    public void checkBodyTegSuccessFalse(Response response) {
+        response.then().assertThat()
+                .body("success", equalTo(false));
     }
 
     public void checkBodyUserEmail(Response response, User user) {

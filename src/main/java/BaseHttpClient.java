@@ -6,8 +6,6 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
-import java.net.Authenticator;
-
 import static io.restassured.RestAssured.given;
 
 
@@ -48,9 +46,10 @@ public class BaseHttpClient {
                 .thenReturn();
     }
 
-    protected Response doDelete(String path) {
+    protected Response doDeleteRequest(String path, String accessToken) {
         return given()
                 .spec(baseRequestSpec)
+                .auth().oauth2(accessToken)
                 .delete(path)
                 .thenReturn();
     }

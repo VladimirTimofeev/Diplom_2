@@ -6,7 +6,8 @@ import org.junit.Test;
 public class GetTest {
 
     private GetApi getApi = new GetApi();
-    private CheckStatus checkStatus = new CheckStatus();
+    private PostApi postApi = new PostApi();
+    private CheckStatusCode checkStatusCode = new CheckStatusCode();
     private CheckBodyResponse checkBodyResponse = new CheckBodyResponse();
 
     private Response response;
@@ -14,13 +15,18 @@ public class GetTest {
     private String accsessToken;
     private String refreshToken;
 
+    @Step("Авторизация пользователя")
+    public Response authorizationUser() {
+        return response = postApi.authorizationUser(UsersData.expectedUser());
+    }
+
     @Step("Send get request to /api/ingredients without token")
     public Response getOrderSpecificUserWithoutToken() {
         return response = getApi.getRequestSpecificUser();
     }
 
     @Step("Send get request to /api/ingredients with token")
-    public Response getOrderSpecificUserWithToken() {
+    public Response getOrderSpecificUserWithToken(String accsessToken) {
         return response = getApi.getRequestSpecificUser(accsessToken);
     }
 
@@ -32,12 +38,12 @@ public class GetTest {
 
     @Step("Check response status code 200")
     public void checkStatusCode200(Response response) {
-        checkStatus.checkStatusCode200(response);
+        checkStatusCode.checkStatusCode200(response);
     }
 
     @Step("Check response status code 401")
     public void checkStatusCode401(Response response) {
-        checkStatus.checkStatusCode401(response);
+        checkStatusCode.checkStatusCode401(response);
     }
 
     @Step("Check body ID")
@@ -47,7 +53,7 @@ public class GetTest {
 
     @Step("Check teg succsess TRUE")
     public void checkBodyTegSuccessTrue(Response response) {
-        checkBodyResponse.checkDodyTegSuccessTrue(response);
+        checkBodyResponse.checkBodyTegSuccessTrue(response);
     }
 
     @Test
@@ -61,7 +67,11 @@ public class GetTest {
     @Test
     @DisplayName("Получение списка ингридиентов авторизованного пользователя")
     public void getListIngridientsSpecUserWithToken() {
-        response = getOrderSpecificUserWithToken();
+        response = authorizationUser();
+        getAccessToken(response);
+        response = getOrderSpecificUserWithToken(accsessToken.substring(7));
+        System.out.println(accsessToken);
+        System.out.println(refreshToken);
         checkStatusCode200(response);
         checkBodyTegSuccessTrue(response);
     }
