@@ -4,7 +4,7 @@ import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Test;
 
-public class UserTokenTest {
+public class CreateUserTest {
 
     private PostApi postApi = new PostApi();
     private DeleteApi deleteApi = new DeleteApi();

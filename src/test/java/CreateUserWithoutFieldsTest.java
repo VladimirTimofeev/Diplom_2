@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
-public class UserParamTest {
+public class CreateUserWithoutFieldsTest {
 
     private final String email;
     private final String password;
@@ -15,7 +15,7 @@ public class UserParamTest {
     private CheckStatusCode checkStatusCode = new CheckStatusCode();
     private CheckBodyResponse checkBodyResponse = new CheckBodyResponse();
 
-    public UserParamTest(String email, String password, String name) {
+    public CreateUserWithoutFieldsTest(String email, String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;
