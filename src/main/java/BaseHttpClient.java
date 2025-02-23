@@ -38,6 +38,23 @@ public class BaseHttpClient {
                 .thenReturn();
     }
 
+    protected Response doPatchRequest(Object body, String path) {
+        return given()
+                .spec(baseRequestSpec)
+                .body(body)
+                .patch(path)
+                .thenReturn();
+    }
+
+    protected Response doPatchRequest(String token, Object body, String path) {
+        return given()
+                .spec(baseRequestSpec)
+                .auth().oauth2(token)
+                .body(body)
+                .patch(path)
+                .thenReturn();
+    }
+
     protected Response doPostRequest(String path, Object body) {
         return given()
                 .spec(baseRequestSpec)

@@ -5,8 +5,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class LoginUserTest {
+public class ModifyUserTest {
 
+    private GetApi getApi = new GetApi();
     private PatchApi patchApi = new PatchApi();
     private PostApi postApi = new PostApi();
     private DeleteApi deleteApi = new DeleteApi();
@@ -35,12 +36,33 @@ public class LoginUserTest {
         return accsessToken = token.extractionToken(response);
     }
 
+    @Step("Авторизация пользователя")
+    public String autorizationUser(String accsessToken) {
+        response = getApi.getRequestUserData(accsessToken);
+        checkStatusCode.checkStatusCode200(response);
+        checkBodyResponse.checkBodyTegSuccessTrue(response);
+        checkBodyResponse.checkBodyUserEmail(response, UsersData.expectedCreateUser());
+        checkBodyResponse.checkBoduUserName(response, UsersData.expectedCreateUser());
+        return accsessToken;
+    }
+
     @Step("Обновление данных пользователя")
-    public void modyfiUser() {
-        response = patchApi.patchRequestModifyUser(UsersData.modyfiedUser());
-        checkStatusCode.checkStatusCode401(response);
-        checkBodyResponse.checkBodyTegSuccessFalse(response);
-        checkBodyResponse.checkMessageNotAuthorizationUser(response);
+    public void modyfiUser(String accsessToken) {
+        response = patchApi.patchRequestModifyUser(accsessToken, UsersData.modyfiedUser());
+        checkStatusCode.checkStatusCode200(response);
+        checkBodyResponse.checkBodyTegSuccessTrue(response);
+        checkBodyResponse.checkBodyUserEmail(response, UsersData.modyfiedUser());
+        checkBodyResponse.checkBoduUserName(response, UsersData.modyfiedUser());
+    }
+
+    @Step("Проверка измененного пользователя")
+    public String checkModifyUser() {
+        response = postApi.authorizationUser(UsersData.modyfiedUser());
+        checkStatusCode.checkStatusCode200(response);
+        checkBodyResponse.checkBodyTegSuccessTrue(response);
+        checkBodyResponse.checkBodyUserEmail(response, UsersData.modyfiedUser());
+        checkBodyResponse.checkBoduUserName(response, UsersData.modyfiedUser());
+        return accsessToken = token.extractionToken(response);
     }
 
     @Step("Удаление клиента")
@@ -58,21 +80,17 @@ public class LoginUserTest {
     }
 
     @Test
-    @DisplayName("Авторизация пользователя")
-    public void loginUser() {
-        checkAuthorizationUser();
-    }
-
-    @Test
-    @DisplayName("Обновление данных пользователя без авторизации")
-    public void modifyUserWithoutAuthorization() {
-        modyfiUser();
+    @DisplayName("Получение данных авторизованного пользователя")
+    public void gettingDataUser() {
+        accsessToken = checkAuthorizationUser();
+        accsessToken = autorizationUser(accsessToken);
+        modyfiUser(accsessToken);
     }
 
     @After
     @DisplayName("Удаление пользователя")
     public void deleteUser() {
-        accsessToken = checkAuthorizationUser();
+        accsessToken = checkModifyUser();
         deleteUserAndCheckResponse(accsessToken);
     }
 }

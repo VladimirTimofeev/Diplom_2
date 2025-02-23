@@ -6,10 +6,12 @@ import org.junit.Test;
 
 public class CreateUserTest {
 
+    private GetApi getApi = new GetApi();
     private PostApi postApi = new PostApi();
     private DeleteApi deleteApi = new DeleteApi();
     private CheckStatusCode checkStatusCode = new CheckStatusCode();
     private CheckBodyResponse checkBodyResponse = new CheckBodyResponse();
+    private Token token = new Token();
     private Response response;
 
     private String accsessToken;
@@ -22,6 +24,14 @@ public class CreateUserTest {
         checkBodyResponse.checkBodyTegSuccessTrue(response);
         checkBodyResponse.checkBodyUserEmail(response, UsersData.expectedCreateUser());
         checkBodyResponse.checkBoduUserName(response, UsersData.expectedCreateUser());
+    }
+
+    @Step("Отправка запроса на создание пользователя и проверка его создания")
+    public String createUserWithToken() {
+        response = postApi.postCreateUser(UsersData.expectedCreateUser());
+        checkStatusCode.checkStatusCode200(response);
+        checkBodyResponse.checkBodyTegSuccessTrue(response);
+        return accsessToken = token.extractionToken(response);
     }
 
     @Step("Отправка запроса на создание имеющегося пользователя и проверка ответа")
@@ -47,9 +57,7 @@ public class CreateUserTest {
 
     @Step("Извлечение accessToken и refreshToken")
     public String getAccessToken(Response response) {
-        accsessToken = response.jsonPath().getString("accessToken");
-        return accsessToken.substring(7);
-//        refreshToken = response.jsonPath().getString("refreshToken");
+        return accsessToken = token.extractionToken(response);
     }
 
 

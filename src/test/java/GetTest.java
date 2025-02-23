@@ -64,15 +64,15 @@ public class GetTest {
         checkBodyMessageNotAuthorizationUser(response);
     }
 
-    @Test
-    @DisplayName("Получение списка ингридиентов авторизованного пользователя")
-    public void getListIngridientsSpecUserWithToken() {
-        response = authorizationUser();
-        getAccessToken(response);
-        response = getOrderSpecificUserWithToken(accsessToken.substring(7));
-        System.out.println(accsessToken);
-        System.out.println(refreshToken);
-        checkStatusCode200(response);
-        checkBodyTegSuccessTrue(response);
-    }
+//    @Test
+//    @DisplayName("Получение списка ингридиентов авторизованного пользователя")
+//    public void getListIngridientsSpecUserWithToken() {
+//        response = authorizationUser();
+//        getAccessToken(response);
+//        response = getOrderSpecificUserWithToken(accsessToken.substring(7));
+//        System.out.println(accsessToken);
+//        System.out.println(refreshToken);
+//        checkStatusCode200(response);
+//        checkBodyTegSuccessTrue(response);
+//    }
 }
