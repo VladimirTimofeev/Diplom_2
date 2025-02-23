@@ -17,7 +17,7 @@ public class GetTest {
 
     @Step("Авторизация пользователя")
     public Response authorizationUser() {
-        return response = postApi.authorizationUser(UsersData.expectedUser());
+        return response = postApi.authorizationUser(UsersData.expectedCreateUser());
     }
 
     @Step("Send get request to /api/ingredients without token")

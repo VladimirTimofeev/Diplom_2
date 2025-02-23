@@ -4,17 +4,37 @@ import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
-public class LoginUserTest {
+@RunWith(Parameterized.class)
+public class LoginUserWithIncorrectDataTest {
+
+    private final String email;
+    private final String password;
 
     private PostApi postApi = new PostApi();
-    private DeleteApi deleteApi = new DeleteApi();
     private CheckStatusCode checkStatusCode = new CheckStatusCode();
     private CheckBodyResponse checkBodyResponse = new CheckBodyResponse();
+    private DeleteApi deleteApi = new DeleteApi();
 
-    private String accsessToken;
+    private String accessToken;
 
-    private Response response;
+    Response response;
+
+    public LoginUserWithIncorrectDataTest(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+
+    @Parameterized.Parameters
+    public static Object[][] loginUserWithIncorrectLoginOrPassword() {
+        return new Object[][] {
+                {"tgb@bgt.re", "123321"},
+                {"asdqwe@dsa.dsa", "789987"}
+        };
+    }
 
     @Step("Создание клиента и проверка ответа")
     public void createNewUser() {
@@ -26,12 +46,20 @@ public class LoginUserTest {
     @Step("Авторизация клиента и проверка ответа об успешной авторизации")
     public String authorizationUser() {
         response = postApi.authorizationUser(UsersData.expectedRegistrationUser());
-        accsessToken = response.jsonPath().getString("accessToken");
+        accessToken = response.jsonPath().getString("accessToken");
         checkStatusCode.checkStatusCode200(response);
         checkBodyResponse.checkBodyTegSuccessTrue(response);
         checkBodyResponse.checkBodyUserEmail(response, UsersData.expectedCreateUser());
         checkBodyResponse.checkBoduUserName(response, UsersData.expectedCreateUser());
-        return accsessToken.substring(7);
+        return accessToken.substring(7);
+    }
+
+    @Step("Авторизация пользователя с неверными паролем")
+    public void loginUser(User user) {
+        response = postApi.authorizationUser(user);
+        checkStatusCode.checkStatusCode401(response);
+        checkBodyResponse.checkBodyTegSuccessFalse(response);
+        checkBodyResponse.chechMessageLoginOrPasswordIncorrect(response);
     }
 
     @Step("Удаление клиента")
@@ -43,21 +71,21 @@ public class LoginUserTest {
     }
 
     @Before
-    @DisplayName("Создание пользователя")
     public void createUser() {
         createNewUser();
     }
 
     @Test
-    @DisplayName("Авторизация пользователя")
+    @DisplayName("Авторизация пользователя с неверными логином или паролем")
     public void loginUser() {
-        authorizationUser();
+        User user = new User(email, password);
+        loginUser(user);
     }
 
     @After
-    @DisplayName("Удаление пользователя")
+    @DisplayName(("Удкление пользователя"))
     public void deleteUser() {
-        accsessToken = authorizationUser();
-        deleteUserAndCheckResponse(accsessToken);
+        accessToken = authorizationUser();
+        deleteUserAndCheckResponse(accessToken);
     }
 }

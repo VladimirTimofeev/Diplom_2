@@ -17,16 +17,16 @@ public class CreateUserTest {
 
     @Step("Отправка запроса на создание пользователя и проверка его создания")
     public void createUser() {
-        response = postApi.postCreateUser(UsersData.expectedUser());
+        response = postApi.postCreateUser(UsersData.expectedCreateUser());
         checkStatusCode.checkStatusCode200(response);
         checkBodyResponse.checkBodyTegSuccessTrue(response);
-        checkBodyResponse.checkBodyUserEmail(response, UsersData.expectedUser());
-        checkBodyResponse.checkBoduUserName(response, UsersData.expectedUser());
+        checkBodyResponse.checkBodyUserEmail(response, UsersData.expectedCreateUser());
+        checkBodyResponse.checkBoduUserName(response, UsersData.expectedCreateUser());
     }
 
     @Step("Отправка запроса на создание имеющегося пользователя и проверка ответа")
     public void creatingExistingUser() {
-        response = postApi.postCreateUser(UsersData.expectedUser());
+        response = postApi.postCreateUser(UsersData.expectedCreateUser());
         checkStatusCode.checkStatusCode403(response);
         checkBodyResponse.checkBodyTegSuccessFalse(response);
         checkBodyResponse.checkMessageAboutCreatedUser(response);
@@ -42,7 +42,7 @@ public class CreateUserTest {
 
     @Step("Авторизация пользователя")
     public Response authorizationUser() {
-        return response = postApi.authorizationUser(UsersData.expectedUser());
+        return response = postApi.authorizationUser(UsersData.expectedRegistrationUser());
     }
 
     @Step("Извлечение accessToken и refreshToken")
@@ -67,6 +67,7 @@ public class CreateUserTest {
     }
 
     @After
+    @DisplayName("Удаление пользователя")
     public void authorizationAndDeleteUser() {
         response = authorizationUser();
         accsessToken = getAccessToken(response);

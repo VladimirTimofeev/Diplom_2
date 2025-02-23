@@ -29,6 +29,13 @@ public class CheckBodyResponse {
                 .body("message", equalTo("Email, password and name are required fields"));
     }
 
+    //Проверка ответа с неверными данными клиента при логировании
+    public void chechMessageLoginOrPasswordIncorrect(Response response) {
+        response.then().assertThat()
+                .body("message", equalTo("email or password are incorrect"));
+    }
+
+
     //Проверка тега ответа TRUE
     public void checkBodyTegSuccessTrue(Response response) {
         response.then().assertThat()
