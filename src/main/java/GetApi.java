@@ -2,15 +2,9 @@ import io.restassured.response.Response;
 
 public class GetApi extends BaseHttpClient {
 
-    private final String apiPathRequestOrders = "/api/ingredients";
     private final String apiPathRequestUserData = "/api/auth/user";
     private final String apiPathRequestAllOrders = "/api/orders/all";
     private final String apiPathRequestSpecificUser = "/api/orders";
-
-    //Запрос списка ингридиентов
-    public Response getRequestIngidients() {
-        return doGetRequest(apiPathRequestOrders);
-    }
 
     //Запрос получения данных о пользователе
     public Response getRequestUserData(String accessToken) {

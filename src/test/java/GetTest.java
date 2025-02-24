@@ -6,54 +6,36 @@ import org.junit.Test;
 public class GetTest {
 
     private GetApi getApi = new GetApi();
-    private PostApi postApi = new PostApi();
     private CheckStatusCode checkStatusCode = new CheckStatusCode();
     private CheckBodyResponse checkBodyResponse = new CheckBodyResponse();
 
     private Response response;
 
-    private String accsessToken;
-    private String refreshToken;
-
-    @Step("Авторизация пользователя")
-    public Response authorizationUser() {
-        return response = postApi.authorizationUser(UsersData.expectedCreateUser());
-    }
-
-    @Step("Send get request to /api/ingredients without token")
+    @Step("Отправка запроса заказа конкретного пользователя без токена")
     public Response getOrderSpecificUserWithoutToken() {
         return response = getApi.getRequestSpecificUser();
     }
 
-    @Step("Send get request to /api/ingredients with token")
-    public Response getOrderSpecificUserWithToken(String accsessToken) {
-        return response = getApi.getRequestSpecificUser(accsessToken);
-    }
-
-    @Step("Извлечение accessToken и refreshToken")
-    public void getAccessToken(Response response) {
-        accsessToken = response.jsonPath().getString("accessToken");
-        refreshToken = response.jsonPath().getString("refreshToken");
-    }
-
-    @Step("Check response status code 200")
-    public void checkStatusCode200(Response response) {
+    @Step("Запрос всех заказов")
+    public void getAndCheckAllOrders() {
+        response = getApi.getRequestAllOrders();
         checkStatusCode.checkStatusCode200(response);
+        checkBodyResponse.checkBodyTegSuccessTrue(response);
     }
-
     @Step("Check response status code 401")
     public void checkStatusCode401(Response response) {
         checkStatusCode.checkStatusCode401(response);
     }
 
-    @Step("Check body ID")
+    @Step("Проверка сообщения, что пользователь не авторизован")
     public void checkBodyMessageNotAuthorizationUser(Response response) {
-        checkBodyResponse.checkMessageNotAuthorizationUser(response);
+        checkBodyResponse.checkMessageYouShouldBeAuthorised(response);
     }
 
-    @Step("Check teg succsess TRUE")
-    public void checkBodyTegSuccessTrue(Response response) {
-        checkBodyResponse.checkBodyTegSuccessTrue(response);
+    @Test
+    @DisplayName("Получение всех заказов")
+    public void getAllOrders() {
+        getAndCheckAllOrders();
     }
 
     @Test
@@ -63,16 +45,4 @@ public class GetTest {
         checkStatusCode401(response);
         checkBodyMessageNotAuthorizationUser(response);
     }
-
-//    @Test
-//    @DisplayName("Получение списка ингридиентов авторизованного пользователя")
-//    public void getListIngridientsSpecUserWithToken() {
-//        response = authorizationUser();
-//        getAccessToken(response);
-//        response = getOrderSpecificUserWithToken(accsessToken.substring(7));
-//        System.out.println(accsessToken);
-//        System.out.println(refreshToken);
-//        checkStatusCode200(response);
-//        checkBodyTegSuccessTrue(response);
-//    }
 }

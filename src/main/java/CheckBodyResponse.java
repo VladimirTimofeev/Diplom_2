@@ -5,8 +5,8 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public class CheckBodyResponse {
 
-    //Проверка сообщения, что пользователь не выторизован
-    public void checkMessageNotAuthorizationUser(Response response) {
+    //Проверка сообщения, что пользователь не авторизован
+    public void checkMessageYouShouldBeAuthorised(Response response) {
         response.then().assertThat()
                 .body("message", equalTo("You should be authorised"));
     }
@@ -34,7 +34,6 @@ public class CheckBodyResponse {
         response.then().assertThat()
                 .body("message", equalTo("email or password are incorrect"));
     }
-
 
     //Проверка тега ответа TRUE
     public void checkBodyTegSuccessTrue(Response response) {

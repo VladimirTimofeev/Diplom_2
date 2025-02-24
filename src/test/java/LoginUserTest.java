@@ -40,7 +40,7 @@ public class LoginUserTest {
         response = patchApi.patchRequestModifyUser(UsersData.modyfiedUser());
         checkStatusCode.checkStatusCode401(response);
         checkBodyResponse.checkBodyTegSuccessFalse(response);
-        checkBodyResponse.checkMessageNotAuthorizationUser(response);
+        checkBodyResponse.checkMessageYouShouldBeAuthorised(response);
     }
 
     @Step("Удаление клиента")

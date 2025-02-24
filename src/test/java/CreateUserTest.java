@@ -6,7 +6,6 @@ import org.junit.Test;
 
 public class CreateUserTest {
 
-    private GetApi getApi = new GetApi();
     private PostApi postApi = new PostApi();
     private DeleteApi deleteApi = new DeleteApi();
     private CheckStatusCode checkStatusCode = new CheckStatusCode();
@@ -15,7 +14,6 @@ public class CreateUserTest {
     private Response response;
 
     private String accsessToken;
-    private String refreshToken;
 
     @Step("Отправка запроса на создание пользователя и проверка его создания")
     public void createUser() {
@@ -26,14 +24,6 @@ public class CreateUserTest {
         checkBodyResponse.checkBoduUserName(response, UsersData.expectedCreateUser());
     }
 
-    @Step("Отправка запроса на создание пользователя и проверка его создания")
-    public String createUserWithToken() {
-        response = postApi.postCreateUser(UsersData.expectedCreateUser());
-        checkStatusCode.checkStatusCode200(response);
-        checkBodyResponse.checkBodyTegSuccessTrue(response);
-        return accsessToken = token.extractionToken(response);
-    }
-
     @Step("Отправка запроса на создание имеющегося пользователя и проверка ответа")
     public void creatingExistingUser() {
         response = postApi.postCreateUser(UsersData.expectedCreateUser());
@@ -42,7 +32,7 @@ public class CreateUserTest {
         checkBodyResponse.checkMessageAboutCreatedUser(response);
     }
 
-    @Step("Отправка запроса на удаление пользователя и проверка ответа на его удачное исполнение")
+    @Step("Удаление пользователя и проверка ответа на его удачное исполнение")
     public void deleteUser(String accsessToken) {
         response = deleteApi.deleteUser(accsessToken);
         checkStatusCode.checkStatusCode202(response);

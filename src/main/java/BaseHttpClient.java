@@ -70,5 +70,4 @@ public class BaseHttpClient {
                 .delete(path)
                 .thenReturn();
     }
-
 }
