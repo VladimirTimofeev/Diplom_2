@@ -3,7 +3,7 @@ import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.Test;
 
-public class GetTest {
+public class GetAllOrdersTest {
 
     private GetApi getApi = new GetApi();
     private CheckStatusCode checkStatusCode = new CheckStatusCode();
