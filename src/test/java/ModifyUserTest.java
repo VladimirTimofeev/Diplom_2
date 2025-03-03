@@ -36,16 +36,6 @@ public class ModifyUserTest {
         return accsessToken = token.extractionToken(response);
     }
 
-    @Step("Авторизация пользователя")
-    public String autorizationUser(String accsessToken) {
-        response = getApi.getRequestUserData(accsessToken);
-        checkStatusCode.checkStatusCode200(response);
-        checkBodyResponse.checkBodyTegSuccessTrue(response);
-        checkBodyResponse.checkBodyUserEmail(response, UsersData.expectedCreateUser());
-        checkBodyResponse.checkBoduUserName(response, UsersData.expectedCreateUser());
-        return accsessToken;
-    }
-
     @Step("Обновление данных пользователя")
     public void modyfiUser(String accsessToken) {
         response = patchApi.patchRequestModifyUser(accsessToken, UsersData.modyfiedUser());
@@ -80,10 +70,9 @@ public class ModifyUserTest {
     }
 
     @Test
-    @DisplayName("Получение данных авторизованного пользователя")
+    @DisplayName("Изменение данных авторизованного пользователя")
     public void gettingDataUser() {
         accsessToken = checkAuthorizationUser();
-        accsessToken = autorizationUser(accsessToken);
         modyfiUser(accsessToken);
     }
 
