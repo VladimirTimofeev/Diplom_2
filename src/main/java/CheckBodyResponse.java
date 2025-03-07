@@ -41,6 +41,11 @@ public class CheckBodyResponse {
                 .body("success", equalTo(true));
     }
 
+    //Проверка тега ответа TRUE
+    public boolean getBodyTegSuccessTrue(Response response) {
+        return Boolean.parseBoolean(response.jsonPath().getString("success"));
+    }
+
     //Проверка тега ответа FALSE
     public void checkBodyTegSuccessFalse(Response response) {
         response.then().assertThat()

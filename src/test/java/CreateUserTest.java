@@ -2,6 +2,7 @@ import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class CreateUserTest {
@@ -50,6 +51,19 @@ public class CreateUserTest {
         return accsessToken = token.extractionToken(response);
     }
 
+    @Step
+    public boolean findUser() {
+        response = postApi.authorizationUser(UsersData.expectedCreateUser());
+        return checkBodyResponse.getBodyTegSuccessTrue(response);
+    }
+
+    @Before
+    public void checkUser() {
+        if (findUser()) {
+            deleteUser(getAccessToken(authorizationUser()));
+        }
+    }
+
 
     @Test
     @DisplayName("Создание нового пользователя")
@@ -67,8 +81,6 @@ public class CreateUserTest {
     @After
     @DisplayName("Удаление пользователя")
     public void authorizationAndDeleteUser() {
-        response = authorizationUser();
-        accsessToken = getAccessToken(response);
-        deleteUser(accsessToken);
+        deleteUser(getAccessToken(authorizationUser()));
     }
 }

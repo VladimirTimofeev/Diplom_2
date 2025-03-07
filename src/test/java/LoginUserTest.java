@@ -18,6 +18,22 @@ public class LoginUserTest {
 
     private Response response;
 
+    @Step
+    public boolean findUser() {
+        response = postApi.authorizationUser(UsersData.expectedCreateUser());
+        return checkBodyResponse.getBodyTegSuccessTrue(response);
+    }
+
+    @Step("Авторизация пользователя")
+    public Response authorizationUser() {
+        return response = postApi.authorizationUser(UsersData.expectedRegistrationUser());
+    }
+
+    @Step("Извлечение accessToken и refreshToken")
+    public String getAccessToken(Response response) {
+        return accsessToken = token.extractionToken(response);
+    }
+
     @Step("Создание клиента и проверка ответа")
     public void createNewUser() {
         response = postApi.postCreateUser(UsersData.expectedCreateUser());
@@ -54,6 +70,9 @@ public class LoginUserTest {
     @Before
     @DisplayName("Создание пользователя")
     public void createUser() {
+        if (findUser()) {
+            deleteUserAndCheckResponse(getAccessToken(authorizationUser()));
+        }
         createNewUser();
     }
 
@@ -72,7 +91,6 @@ public class LoginUserTest {
     @After
     @DisplayName("Удаление пользователя")
     public void deleteUser() {
-        accsessToken = checkAuthorizationUser();
-        deleteUserAndCheckResponse(accsessToken);
+        deleteUserAndCheckResponse(checkAuthorizationUser());
     }
 }
